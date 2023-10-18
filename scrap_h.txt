@@ -1,0 +1,92 @@
+class RectangularTube : public InputSection{
+private:
+    double b, h, tf, tw;
+public:
+    explicit RectangularTube(wxWindow* parent);
+};
+
+
+class Triangle : public InputSection{
+private:
+    double b, h;
+public:
+    explicit Triangle(wxWindow* parent);
+};
+
+
+class TriangleWithCutout : public InputSection{
+private:
+    double b, h, a, w, c;
+public:
+    explicit TriangleWithCutout(wxWindow* parent);
+};
+
+class CircularWedge : public InputSection{
+private:
+    double r, theta;
+    int nPts;
+public:
+    explicit CircularWedge(wxWindow* parent);
+};
+
+class CircularArc : public InputSection{
+private:
+    double rOuter, rInner, theta;
+    int nPts;
+public:
+    explicit CircularArc(wxWindow* parent);
+};
+
+class SolidNGon : public InputSection{
+private:
+    double r;
+    int nPts;
+public:
+    explicit SolidNGon(wxWindow* parent);
+};
+
+class TBeam : public InputSection{
+private:
+    double b, tf, h, tw;
+public:
+    explicit TBeam(wxWindow* parent);
+};
+
+class IBeam : public InputSection{
+private:
+    double b, tf, h, tw;
+public:
+    explicit IBeam(wxWindow* parent);
+};
+
+class IBeamFillet : public InputSection{
+private:
+    double b, tf, h, tw, r;
+    int nPts;
+public:
+    explicit IBeamFillet(wxWindow* parent);
+};
+
+class Channel : public InputSection{
+private:
+    double b, tf, h, tw, r;
+    int nPts;
+public:
+    explicit Channel(wxWindow* parent);
+};
+
+class LBeam : public InputSection{
+private:
+    double t, b, h, r, a, F;
+    int nPts;
+public:
+    explicit LBeam(wxWindow* parent);
+};
+
+class Rose : public InputSection{
+private:
+    double t, r, a, F;
+    int nPts;
+public:
+    explicit Rose(wxWindow* parent);
+};

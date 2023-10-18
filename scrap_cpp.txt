@@ -1,0 +1,392 @@
+RectangularTube::RectangularTube(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 2;
+    h = 5;
+    tf = 0.5;
+    tw = 0.5;
+    m_inputFields = {
+            {"b", b},
+            {"h", h},
+            {"tf", tf},
+            {"tw", tw}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    m_mainPolygon.emplace_back(0,0);
+    m_mainPolygon.emplace_back(b,0);
+    m_mainPolygon.emplace_back(b,h);
+    m_mainPolygon.emplace_back(0,h);
+    m_mainPolygon.emplace_back(0,0);
+    m_mainPolygon.emplace_back(tw,tf);
+    m_mainPolygon.emplace_back(tw,h-tf);
+    m_mainPolygon.emplace_back(b-tw,h-tf);
+    m_mainPolygon.emplace_back(b-tw,tf);
+    m_mainPolygon.emplace_back(tw,tf);
+    m_mainPolygon.emplace_back(0,0);
+}
+
+Triangle::Triangle(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 6;
+    h = 6;
+    m_inputFields = {
+            {"b", b},
+            {"h", h}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    m_mainPolygon.emplace_back(0,0);
+    m_mainPolygon.emplace_back(b,0);
+    m_mainPolygon.emplace_back(b/2,h);
+    m_mainPolygon.emplace_back(0,0);
+
+}
+
+TriangleWithCutout::TriangleWithCutout(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 6;
+    h = 6;
+    a = 1;
+    w = 1;
+    c = 3;
+    m_inputFields = {
+            {"b", 6},
+            {"h", 6},
+            {"a", 1},
+            {"w", 1},
+            {"c", 3}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    m_mainPolygon.emplace_back(0,0);
+    m_mainPolygon.emplace_back(b,0);
+    m_mainPolygon.emplace_back(b/2,h);
+    m_mainPolygon.emplace_back(0,0);
+    m_mainPolygon.emplace_back(a,w);
+    m_mainPolygon.emplace_back(b/2,h-2*w);
+    m_mainPolygon.emplace_back(2*b/3,c);
+    m_mainPolygon.emplace_back(a,w);
+    m_mainPolygon.emplace_back(0,0);
+}
+
+CircularWedge::CircularWedge(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    r = 2;
+    theta = M_PI/6;
+    nPts = 31;
+    m_inputFields = {
+            {"r", r},
+            {"theta", theta},
+            {"nPts", nPts}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    m_mainPolygon.emplace_back(0,0);
+    for (int i= 0; i < nPts; i++)
+        m_mainPolygon.emplace_back(r* cos(theta + (M_PI - theta)/nPts * i),r* sin(theta + (M_PI - theta)/nPts * i));
+    m_mainPolygon.emplace_back(0,0);
+}
+
+CircularArc::CircularArc(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    rOuter = 5;
+    rInner = 3.7;
+    theta = -M_PI/6.0;
+    nPts = 41;
+    m_inputFields = {
+            {"rOuter", rOuter},
+            {"rInner", rInner},
+            {"angle", theta},
+            {"nPts", nPts}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    for (int i = 0; i < nPts; i++)
+        m_mainPolygon.emplace_back(rOuter* cos(theta + (M_PI - theta)/nPts * i),
+                                   rOuter* sin(theta + (M_PI - theta)/nPts * i));
+    for (int i = nPts-1; i >= 0; i--)
+        m_mainPolygon.emplace_back(rInner* cos(theta + (M_PI - theta)/nPts * i),
+                                   rInner* sin(theta + (M_PI - theta)/nPts * i));
+
+    m_mainPolygon.emplace_back(rOuter* cos(theta),rOuter* sin(theta));
+
+}
+
+SolidNGon::SolidNGon(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    r = 1;
+    nPts = 51;
+    m_inputFields = {
+            {"r", r},
+            {"nPts", nPts}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    for (int i= 0; i < nPts; i++)
+        m_mainPolygon.emplace_back(r* cos(2*M_PI/nPts * i),r * sin(2*M_PI/nPts * i));
+}
+
+TBeam::TBeam(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 10;
+    tf = 2;
+    h = 10;
+    tw = 2;
+    m_inputFields = {
+            {"b", b},
+            {"tf", tf},
+            {"h", h},
+            {"tw", tw}
+    };
+    CreateFields();
+
+    // Setup coordinate list
+    double B = b/2;
+    double Tw = tw/2;
+    double H = h - tf;
+    m_mainPolygon.emplace_back(Tw,0);
+    m_mainPolygon.emplace_back(Tw,H);
+    m_mainPolygon.emplace_back(B,H);
+    m_mainPolygon.emplace_back(B,h);
+    m_mainPolygon.emplace_back(-B,h);
+    m_mainPolygon.emplace_back(-B,H);
+    m_mainPolygon.emplace_back(-Tw,H);
+    m_mainPolygon.emplace_back(-Tw,0);
+    m_mainPolygon.emplace_back(Tw,0);
+}
+
+IBeam::IBeam(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 12;
+    tf = 1.5;
+    h = 18;
+    tw = 0.8;
+    m_inputFields = {
+            {"b", b},
+            {"tf", tf},
+            {"h", h},
+            {"tw", tw}
+    };
+    CreateFields();
+    // Setup coordinate list
+    double B = b/2;
+    double Tw = tw/2;
+    m_mainPolygon.emplace_back(B,0);
+    m_mainPolygon.emplace_back(B,tf);
+    m_mainPolygon.emplace_back(Tw,tf);
+    m_mainPolygon.emplace_back(Tw,h-tf);
+    m_mainPolygon.emplace_back(B,h-tf);
+    m_mainPolygon.emplace_back(B,h);
+    m_mainPolygon.emplace_back(-B,h);
+    m_mainPolygon.emplace_back(-B,h-tf);
+    m_mainPolygon.emplace_back(-Tw,h-tf);
+    m_mainPolygon.emplace_back(-Tw,tf);
+    m_mainPolygon.emplace_back(-B,tf);
+    m_mainPolygon.emplace_back(-B,0);
+    m_mainPolygon.emplace_back(B,0);
+}
+
+IBeamFillet::IBeamFillet(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 12;
+    tf = 1.5;
+    h = 18;
+    tw = 0.8;
+    r = 1;
+    nPts = 6;
+    m_inputFields = {
+            {"b", b},
+            {"tf", tf},
+            {"h", h},
+            {"tw", tw},
+            {"r", r},
+            {"nPts", nPts}
+    };
+    CreateFields();
+    // Setup coordinate list
+    double B = b/2;
+    double Tw = tw/2;
+
+    m_mainPolygon.emplace_back(B,0);
+    double theta, ct, st;
+    for(int i = 0; i < nPts; i++) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(B - r * ct, tf - r * st);
+    }
+    for(int i = 0; i < nPts; i++) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(Tw + r * st, tf + r  * ct);
+    }
+    for(int i = nPts; i >= 0 ; i--)
+    {
+        theta = M_PI*0.5/nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(Tw + r * st, h - (tf + r  * ct));
+    }
+    for(int i = nPts-1; i >= 0 ; i--) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(B - r * ct, h - (tf - r * st));
+    }
+    m_mainPolygon.emplace_back(B,h);
+    m_mainPolygon.emplace_back(-B,h);
+    for(int i = 0; i < nPts; i++) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(-1*(B - r * ct), h-(tf - r * st));
+    }
+    for(int i = 0; i < nPts; i++) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(-1*(Tw + r * st), h-(tf + r  * ct));
+    }
+    for(int i = nPts; i >= 0 ; i--)
+    {
+        theta = M_PI*0.5/nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(-1*(Tw + r * st), (tf + r  * ct));
+    }
+    for(int i = nPts-1; i >= 0 ; i--) {
+        theta = M_PI * 0.5 / nPts * i;
+        ct = 1 - cos(theta);
+        st = 1 - sin(theta);
+        m_mainPolygon.emplace_back(-1*(B - r * ct), (tf - r * st));
+    }
+    m_mainPolygon.emplace_back(-B,0);
+    m_mainPolygon.emplace_back(B,0);
+
+}
+
+Channel::Channel(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    b = 12;
+    tf = 1.5;
+    h = 18;
+    tw = 0.8;
+    r = 1;
+    nPts = 6;
+    m_inputFields = {
+            {"b", b},
+            {"tf", tf},
+            {"h", h},
+            {"tw", tw},
+            {"r", r},
+            {"nPts", nPts}
+    };
+    CreateFields();
+    // Setup coordinate list
+    std::vector<double> theta(nPts + 1);
+    std::vector<int> pts(nPts + 1);
+    std::vector<double> ct(nPts + 1), st(nPts + 1);
+    std::vector<double> fx((nPts + 1)*2+1), fy((nPts + 1)*2+1);
+
+    fx[0] = 0; fy[0] = 0;
+    std::iota(pts.begin(), pts.end(), 0);
+    std::transform(pts.begin(), pts.end(), theta.begin(), [&](int i){return i * M_PI * 0.5/(nPts+1);});
+    std::transform(theta.begin(), theta.end(), ct.begin(), [](double t){return 1 - cos(t);});
+    std::transform(theta.begin(), theta.end(), st.begin(), [](double t){return 1 - sin(t);});
+
+    std::transform(ct.begin(), ct.end(), fx.begin() + 1, [&](double c){return b - r * c;});
+    std::transform(st.begin(), st.end(), fy.begin() + 1, [&](double s){return tf - r * s;});
+
+    std::transform(st.begin(), st.end(), fx.begin() + nPts + 2, [&](double s){return tw + r * s;});
+    std::transform(ct.begin(), ct.end(), fy.begin() + nPts + 2, [&](double c){return tf + r * c;});
+
+   for (int i = 0; i < (nPts + 1) * 2 + 1; i++)
+       m_mainPolygon.emplace_back(fx[i], fy[i]);
+
+   std::vector<double> fx_r(fx), fy_r(fy);
+   std::reverse(fx_r.begin(), fx_r.end());
+   std::transform(fy.begin(), fy.end(), fy_r.begin(), [&](double y){return h - y;});
+   std::reverse(fy_r.begin(), fy_r.end());
+
+    for (int i = 0; i < (nPts + 1) * 2 + 1; i++)
+        m_mainPolygon.emplace_back(fx_r[i], fy_r[i]);
+    m_mainPolygon.emplace_back(0,0);
+
+}
+
+LBeam::LBeam(wxWindow *parent) : InputSection(parent) {
+
+    // Default values
+    t = 12;
+    b = 100;
+    h = 150;
+    nPts = 6;
+    r = 8;
+    m_inputFields = {
+            {"t", t},
+            {"b", b},
+            {"h", h},
+            {"nPts", nPts},
+            {"r", r}
+    };
+    CreateFields();
+    // Setup coordinate list
+    std::vector<double> theta(nPts + 1);
+    std::vector<int> pts(nPts + 1);
+    std::vector<double> ct(nPts + 1), st(nPts + 1);
+    std::vector<double> fx((nPts + 1)*3+6), fy((nPts + 1)*3+6);
+    fx[0] = 0; fy[0] = 0;
+    fx[1] = b; fy[1] = 0;
+
+    std::iota(pts.begin(), pts.end(), 0);
+    std::transform(pts.begin(), pts.end(), theta.begin(), [&](int i){return i * M_PI * 0.5/(nPts+1);});
+    std::transform(theta.begin(), theta.end(), ct.begin(), [](double t){return 1 - cos(t);});
+    std::transform(theta.begin(), theta.end(), st.begin(), [](double t){return 1 - sin(t);});
+
+    std::transform(ct.begin(), ct.end(), fx.begin() + 2, [&](double c){return b - r * c;});
+    std::transform(st.begin(), st.end(), fy.begin() + 2, [&](double s){return t - r * s;});
+
+    std::transform(st.begin(), st.end(), fx.begin() + nPts + 2, [&](double s){return t + r * s;});
+    std::transform(ct.begin(), ct.end(), fy.begin() + nPts + 2, [&](double c){return t + r * c;});
+
+    std::transform(ct.begin(), ct.end(), fx.begin() + nPts*2 + 2, [&](double c){return t - r * c;});
+    std::transform(st.begin(), st.end(), fy.begin() + nPts*2 + 2, [&](double s){return h - r * s;});
+
+    fx.push_back(t-r);fy.push_back(h);
+    fx.push_back(0); fy.push_back(h);
+    fx.push_back(0); fy.push_back(h);
+    fx.push_back(0); fy.push_back(h);
+
+    for (int i = 0; i < (nPts + 1) * 3 + 6; i++)
+        m_mainPolygon.emplace_back(fx[i], fy[i]);
+
+}
+
+
+Rose::Rose(wxWindow *parent) : InputSection(parent) {
+    m_inputFields = {
+            {"t", 2},
+            {"r", 15},
+            {"a", 4},
+            {"F", 4},
+            {"nPts", 1000}
+    };
+    CreateFields();
+}

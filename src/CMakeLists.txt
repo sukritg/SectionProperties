@@ -1,8 +1,9 @@
-# Remove all instructions
-project(Library-Template CXX)                                   #  Rename Project name
+ # Basic Project Settings
+ cmake_minimum_required(VERSION 3.26)
+ project(SectionProperties CXX)
+ set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED  ON)
 
-add_library(test)                                               # Rename library name
-target_include_directories(test PUBLIC ${INCLUDE_PATH})         # Rename library name
-set_target_properties(test PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  # Rename library name
-        "${CMAKE_BINARY_DIR}/lib")
-target_sources(test PUBLIC test.cpp)                            # Rename library name
+ add_library(xprop STATIC section.cpp matrix.cpp point.cpp)
+ target_include_directories(xprop PUBLIC ${INCLUDE_PATH})
+ #set_target_properties(xprop PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")

@@ -4,8 +4,8 @@
  set(CMAKE_CXX_STANDARD 20)
  set(CMAKE_CXX_STANDARD_REQUIRED  ON)
 
+ # header files
+ include_directories(include)
+ add_subdirectory(src)
 
- add_executable(APP_CONSOLE main.cpp)
-target_link_libraries(APP_CONSOLE PRIVATE xprop)
-
-
+ file(COPY assets DESTINATION ${CMAKE_BINARY_DIR}/gui)
